@@ -1,48 +1,35 @@
 # PyElectrochemReader
 
-A small Python library for reading electrochemical measurement files. Python's
-standard library and **NumPy are the only runtime requirements**. No GUI,
-pandas, .NET runtime, Access driver, or external conversion executable.
+A small Python library for reading electrochemical measurement files.
 
 Requires Python 3.10 or newer.
 
 ```sh
 python3 -m pip install .
+python3 -m pip install matplotlib
 ```
+
+Matplotlib is optional and is used here to plot the included MPR example.
+Run this code from the repository root:
 
 ```python
 from pyelectrochemreader import read
+import matplotlib.pyplot as plt
 
-experiment = read("measurement.mpr")
-data = experiment[0]
-
-time = data["time"]          # seconds
-voltage = data["voltage"]    # volts
-current = data["current"]    # amperes
-
-print(data.column_names)
-print(data.unit("current"))
-print(experiment.metadata)
-
-# Native columns retain their recorded units and names.
-milliamps = data["I/mA"]
-
-# Explicitly copy selected signals to a structured NumPy array.
-table = data.to_numpy(["time", "voltage", "current"])
+data = read("example/data/CV_C01.mpr")[0]
+plt.plot(data["voltage"], data["current"])
+plt.xlabel("Voltage (V)")
+plt.ylabel("Current (A)")
+plt.show()
 ```
+
+![Current versus voltage from the included MPR file](example/plots/readme_mpr.png)
 
 Only request signals that the instrument recorded: an open-circuit dataset,
 for example, might have no current column. Use `"current" in data` to check.
 
-To plot data, install Matplotlib separately. It is optional; the reader itself
-still requires only NumPy.
-
-```sh
-python3 -m pip install matplotlib
-```
-
-This example plots voltage and current against time for a dataset with aligned
-time, voltage, and current signals:
+For a dataset with aligned time, voltage, and current signals, you can also
+plot voltage and current against time:
 
 ```python
 import matplotlib.pyplot as plt
