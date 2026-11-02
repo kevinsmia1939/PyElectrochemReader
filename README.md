@@ -34,6 +34,38 @@ table = data.to_numpy(["time", "voltage", "current"])
 Only request signals that the instrument recorded: an open-circuit dataset,
 for example, might have no current column. Use `"current" in data` to check.
 
+To plot data, install Matplotlib separately. It is optional; the reader itself
+still requires only NumPy.
+
+```sh
+python3 -m pip install matplotlib
+```
+
+This example plots voltage and current against time for a dataset with aligned
+time, voltage, and current signals:
+
+```python
+import matplotlib.pyplot as plt
+from pyelectrochemreader import read
+
+data = read("measurement.mpr")[0]
+
+fig, axes = plt.subplots(2, 1, sharex=True, layout="constrained")
+axes[0].plot(data["time"], data["voltage"])
+axes[0].set_ylabel("Voltage (V)")
+
+axes[1].plot(data["time"], data["current"] * 1000)
+axes[1].set_ylabel("Current (mA)")
+axes[1].set_xlabel("Time (s)")
+
+# Optional: save the figure before opening the plot window.
+# fig.savefig("measurement.png", dpi=300)
+plt.show()
+```
+
+See [example/](example/README.md) for one sample file per available format,
+the [plot gallery](example/index.html), and a script to regenerate the plots.
+
 | Extension | Instrument / supported layouts |
 | --- | --- |
 | `.nox` | Metrohm Autolab NOVA NRBF object graphs; calculated numeric command signals |

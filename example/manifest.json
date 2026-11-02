@@ -1,0 +1,44 @@
+[
+  {
+    "file": "CV_C01.mpr",
+    "source": "galvani/tests/testdata/CV_C01.mpr",
+    "format": "mpr",
+    "bytes": 459792,
+    "sha256": "bfb88af504667cca737d07c24462492784b4eb9cd55349cc0d328f775138b571"
+  },
+  {
+    "file": "example.mpt",
+    "source": "fixtures/example.mpt",
+    "format": "mpt",
+    "bytes": 225,
+    "sha256": "0d6e0d04dd420e5769d36d37f2ff17090325ccbacbf556e2b1d3fdd8d081428f"
+  },
+  {
+    "file": "eispot_data.dta",
+    "source": "gamry-parser/tests/eispot_data.dta",
+    "format": "dta",
+    "bytes": 1523,
+    "sha256": "cf3c0beae67a06cc01904c443e92403a7cd2b1613d732b284aae2c309c1986b5"
+  },
+  {
+    "file": "TestFile.nda",
+    "source": "NewareNDA/tests/nda/github/Issue72/TestFile.nda",
+    "format": "nda",
+    "bytes": 393760,
+    "sha256": "bf43594b31e2e9b3d482c2ecc6f2c274418a5d2160b818ed87e70279cabf7b68"
+  },
+  {
+    "file": "123456789012_Unit27_Example_Data_File.ndax",
+    "source": "NewareNDA/tests/nda/github/Issue94/123456789012_Unit27_Example_Data_File.ndax",
+    "format": "ndax",
+    "bytes": 5844,
+    "sha256": "9f7198e5f3854bcb91b8bad268f020836ed1aa48f0135e2f7b1515827e61c9f6"
+  },
+  {
+    "file": "arbin1.res",
+    "source": "galvani/tests/testdata/arbin1.res",
+    "format": "res",
+    "bytes": 544768,
+    "sha256": "4d461c069b396f2179243ca30286fa4cb285ef0c86675bc3c9dc5327980b795e"
+  }
+]
