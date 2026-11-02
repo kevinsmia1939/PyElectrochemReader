@@ -11,6 +11,7 @@ import html
 import json
 from pathlib import Path
 import shutil
+import textwrap
 from urllib.parse import quote
 
 import matplotlib
@@ -27,7 +28,9 @@ PLOTS = ROOT / "plots"
 COLORS = ["#176b91", "#d16a35", "#47805b", "#8656a4", "#b84567"]
 PREFERRED = {".mpr": "CV_C01.mpr", ".mpt": "example.mpt", ".dta": "eispot_data.dta",
              ".nda": "TestFile.nda", ".ndax": "123456789012_Unit27_Example_Data_File.ndax",
-             ".res": "arbin1.res"}
+             ".res": "arbin1.res", ".par": "example_CV_1.par", ".cor": "rde_500rpm.cor",
+             ".csv": "example_CV.csv", ".txt": "example_CV.txt", ".xls": "example_battery.xls",
+             ".ods": "export_data1_cv_results.ods"}
 
 
 def collect(source):
@@ -48,7 +51,8 @@ def collect(source):
                 continue
             selected.append(candidate)
             break
-    manifest = []
+    manifest = json.loads((ROOT / "manifest.json").read_text()) if (ROOT / "manifest.json").exists() else []
+    manifest = {entry["format"]: entry for entry in manifest}
     DATA.mkdir(parents=True, exist_ok=True)
     for path in selected:
         relative = path.relative_to(source)
@@ -61,11 +65,11 @@ def collect(source):
         digest = hashlib.sha256(path.read_bytes()).hexdigest()
         if hashlib.sha256(target.read_bytes()).hexdigest() != digest:
             raise RuntimeError(f"Copy verification failed: {relative}")
-        manifest.append({"file": path.name, "source": relative.as_posix(), "format": path.suffix.lower()[1:],
-                         "bytes": path.stat().st_size, "sha256": digest})
+        manifest[path.suffix.lower()[1:]] = {"file": path.name, "source": relative.as_posix(),
+            "repository": source.name, "format": path.suffix.lower()[1:], "bytes": path.stat().st_size, "sha256": digest}
     for project in ("galvani", "NewareNDA", "gamry-parser", "."):
         license_file = source / project / "LICENSE"
-        label = project if project != "." else "echem-data-viewer"
+        label = project if project != "." else source.name
         if license_file.is_file():
             target = ROOT / "licenses" / label / "LICENSE"
             target.parent.mkdir(parents=True, exist_ok=True)
@@ -73,6 +77,7 @@ def collect(source):
         licenses = source / project / "LICENSES"
         if licenses.is_dir():
             shutil.copytree(licenses, ROOT / "licenses" / label / "LICENSES", dirs_exist_ok=True)
+    manifest = sorted(manifest.values(), key=lambda entry: supported_formats.index("." + entry["format"]))
     (ROOT / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     return manifest
 
@@ -118,6 +123,11 @@ def impedance(dataset):
     magnitude = first(dataset, ("|Z|/Ohm", "Zmod"))
     phase = first(dataset, ("Phase(Z)/deg", "Zphz"))
     return real, negative_imag, magnitude, phase
+
+
+def native_pair(dataset):
+    return [(name, values) for name, values in dataset.columns.items()
+            if values.dtype.kind in "fiu" and name not in ("column_1", "Index", "Data_Point")][:2]
 
 
 def numeric_plot(axis, x, y, *, color, label=None, scatter=False):
@@ -170,7 +180,7 @@ def render_file(experiment, relative, destination):
                     used.add(3)
         else:
             voltage = first(dataset, ("voltage", "Vstep", "Vfwd"))
-            currents = [("current", "Current"), ("Ifwd", "Forward current"),
+            currents = [("current", "Current"), ("current_density", "Current density"), ("Ifwd", "Forward current"),
                         ("Irev", "Reverse current"), ("Idif", "Difference current")]
             if voltage is not None:
                 x, xlabel = x_values(dataset, len(voltage), experiment.format)
@@ -181,19 +191,21 @@ def render_file(experiment, relative, destination):
                 if name not in dataset:
                     continue
                 current = dataset[name] * 1000
+                ylabel = "Current density (mA/cm²)" if name == "current_density" else "Current (mA)"
                 current_color = COLORS[(index + current_index) % len(COLORS)]
                 curve_label = f"{label}: {description}" if name != "current" else label
                 x, xlabel = x_values(dataset, len(current), experiment.format)
                 if numeric_plot(axes[1], x, current, color=current_color, label=curve_label):
-                    axes[1].set(xlabel=xlabel, ylabel="Current (mA)", title="Recorded current")
+                    axes[1].set(xlabel=xlabel, ylabel=ylabel, title="Recorded current")
                     used.add(1)
                 if voltage is not None and numeric_plot(axes[2], voltage, current, color=current_color, label=curve_label):
-                    axes[2].set(xlabel="Voltage (V)", ylabel="Current (mA)", title="Current versus potential")
+                    axes[2].set(xlabel="Voltage (V)", ylabel=ylabel, title="Current versus potential")
                     used.add(2)
                 if name != "current":
                     legends.update((1, 2))
             for name, description, counter_color in (("charge_capacity", "Charge", COLORS[2]),
-                                                       ("discharge_capacity", "Discharge", COLORS[1])):
+                                                       ("discharge_capacity", "Discharge", COLORS[1]),
+                                                       ("capacity", "Capacity", COLORS[2])):
                 if name in dataset:
                     values = dataset[name] * 1000
                     x, xlabel = x_values(dataset, len(values), experiment.format)
@@ -201,12 +213,20 @@ def render_file(experiment, relative, destination):
                         axes[3].set(xlabel=xlabel, ylabel="Capacity (mAh)", title="Recorded capacity counters")
                         used.add(3)
                         legends.add(3)
+            if not used:
+                pair = native_pair(dataset)
+                if len(pair) == 2:
+                    (xname, x), (yname, y) = pair
+                    if numeric_plot(axes[0], x, y, color=color, label=label):
+                        axes[0].set(xlabel=textwrap.fill(xname, 40), ylabel=textwrap.fill(yname, 40),
+                                    title="Native columns (units as recorded)")
+                        used.add(0)
     for index, axis in enumerate(axes):
         if index in used:
             axis.grid(alpha=.2)
             axis.spines[["top", "right"]].set_visible(False)
             axis.ticklabel_format(style="sci", axis="both", scilimits=(-4, 5)) if not eis else None
-            if index in legends or len(datasets) > 1:
+            if (index in legends or len(datasets) > 1) and len(datasets) <= 8:
                 axis.legend(fontsize=7, loc="best")
         else:
             axis.set_axis_off()
@@ -236,11 +256,16 @@ def render_overview(results):
         elif file_format == "mpr" and "voltage" in dataset and "current" in dataset:
             numeric_plot(axis, dataset["voltage"], dataset["current"] * 1000, color=COLORS[0])
             axis.set(xlabel="Voltage (V)", ylabel="Current (mA)")
-        else:
+        elif "voltage" in dataset:
             values = numeric(dataset["voltage"])
             x, xlabel = x_values(dataset, len(values), file_format)
             numeric_plot(axis, x, values, color=COLORS[0])
             axis.set(xlabel=xlabel, ylabel="Voltage (V)")
+        else:
+            pair = native_pair(dataset)
+            if len(pair) == 2:
+                numeric_plot(axis, pair[0][1], pair[1][1], color=COLORS[0])
+                axis.set(xlabel="First numeric signal (native units)", ylabel="Second numeric signal (native units)")
         axis.set_title(f".{file_format.upper()} • {filename}", fontsize=8, loc="left", pad=10)
         axis.grid(alpha=.2)
         axis.spines[["top", "right"]].set_visible(False)
@@ -282,7 +307,7 @@ footer{display:flex;justify-content:space-between;gap:12px;margin-top:16px;font-
 <p>One example file per available format. Click a plot for full resolution or download its raw file.<br>
 Missing signals are marked; recorded gaps remain missing. Neware plots use record indices because recorded step time can reset.
 No .nox file was found in the source checkout.</p>
-<p><a href="plots/overview.png">Six-format overview</a> · <a href="manifest.json">File hashes and provenance</a> · <a href="results.json">Read results</a></p></header>
+<p><a href="plots/overview.png">Format overview</a> · <a href="manifest.json">File hashes and provenance</a> · <a href="results.json">Read results</a></p></header>
 <nav><input id="search" aria-label="Filter files" placeholder="Find a file or source folder…"><select id="format" aria-label="Filter by format"><option value="">All formats</option>OPTIONS</select></nav>
 <div class="grid">CARDS</div></main><script>
 const search=document.querySelector('#search'), format=document.querySelector('#format');

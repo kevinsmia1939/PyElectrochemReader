@@ -24,6 +24,12 @@ checkout. It does not import that application or its bundled packages.
 The reference application's Gamry fixtures were used for validation. The new
 text-table reader does not incorporate gamry-parser code.
 
+The PAR/COR readers and spreadsheet handling were independently implemented
+against the native samples and format conventions in
+[PySimpleEChem](https://github.com/kevinsmia1939/PySimpleEChem), by Kavin Teenakul
+(GPLv3). No GUI, pandas, or analysis code from that application is imported.
+Copied example data retains the project's license in `example/licenses/PySimpleEChem/`.
+
 Rewritten and adapted files are marked with the modification date 2026-11-02.
 The complete package is distributed under GPL-3.0-or-later; its license is
 included both at the repository root and inside the installed package.

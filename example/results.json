@@ -8,7 +8,8 @@
     "status": "plotted",
     "primary_records": 12246,
     "datasets": 1,
-    "plot": "plots/CV_C01.mpr.png"
+    "plot": "plots/CV_C01.mpr.png",
+    "repository": "echem-data-viewer"
   },
   {
     "file": "example.mpt",
@@ -19,7 +20,8 @@
     "status": "plotted",
     "primary_records": 6,
     "datasets": 1,
-    "plot": "plots/example.mpt.png"
+    "plot": "plots/example.mpt.png",
+    "repository": "echem-data-viewer"
   },
   {
     "file": "eispot_data.dta",
@@ -30,7 +32,8 @@
     "status": "plotted",
     "primary_records": 10,
     "datasets": 1,
-    "plot": "plots/eispot_data.dta.png"
+    "plot": "plots/eispot_data.dta.png",
+    "repository": "echem-data-viewer"
   },
   {
     "file": "TestFile.nda",
@@ -41,7 +44,8 @@
     "status": "plotted",
     "primary_records": 6670,
     "datasets": 1,
-    "plot": "plots/TestFile.nda.png"
+    "plot": "plots/TestFile.nda.png",
+    "repository": "echem-data-viewer"
   },
   {
     "file": "123456789012_Unit27_Example_Data_File.ndax",
@@ -52,7 +56,8 @@
     "status": "plotted",
     "primary_records": 301,
     "datasets": 5,
-    "plot": "plots/123456789012_Unit27_Example_Data_File.ndax.png"
+    "plot": "plots/123456789012_Unit27_Example_Data_File.ndax.png",
+    "repository": "echem-data-viewer"
   },
   {
     "file": "arbin1.res",
@@ -63,6 +68,79 @@
     "status": "plotted",
     "primary_records": 2633,
     "datasets": 1,
-    "plot": "plots/arbin1.res.png"
+    "plot": "plots/arbin1.res.png",
+    "repository": "echem-data-viewer"
+  },
+  {
+    "file": "example_CV_1.par",
+    "source": "example_data/example_CV_1.par",
+    "repository": "PySimpleEChem",
+    "format": "par",
+    "bytes": 190341,
+    "sha256": "79edea3504f7f0b2cb73c93edd7ce5f0799ee7f9d666f10fc2d58ca94e76bfd2",
+    "status": "plotted",
+    "primary_records": 2000,
+    "datasets": 1,
+    "plot": "plots/example_CV_1.par.png"
+  },
+  {
+    "file": "rde_500rpm.cor",
+    "source": "example_data/rde_500rpm.cor",
+    "repository": "PySimpleEChem",
+    "format": "cor",
+    "bytes": 27585,
+    "sha256": "450fc61da17ddb1be05a492288babf8d15055c095dd818c670cd8431da9764c5",
+    "status": "plotted",
+    "primary_records": 601,
+    "datasets": 1,
+    "plot": "plots/rde_500rpm.cor.png"
+  },
+  {
+    "file": "example_CV.csv",
+    "source": "example_data/example_CV.csv",
+    "repository": "PySimpleEChem",
+    "format": "csv",
+    "bytes": 76895,
+    "sha256": "d0799515c0beea837d5687b6d09ae36094469ef58358bbe625c2bf2bd8e8707b",
+    "status": "plotted",
+    "primary_records": 1997,
+    "datasets": 1,
+    "plot": "plots/example_CV.csv.png"
+  },
+  {
+    "file": "example_CV.txt",
+    "source": "example_data/example_CV.txt",
+    "repository": "PySimpleEChem",
+    "format": "txt",
+    "bytes": 80888,
+    "sha256": "d87c4294dce525c2a9788ffb95a5ee8f93abf1f727d99659dc97222eca870e67",
+    "status": "plotted",
+    "primary_records": 1997,
+    "datasets": 1,
+    "plot": "plots/example_CV.txt.png"
+  },
+  {
+    "file": "example_battery.xls",
+    "source": "example_data/example_battery.xls",
+    "repository": "PySimpleEChem",
+    "format": "xls",
+    "bytes": 84284,
+    "sha256": "970f7a1e44fb89a97deee457ac0826b114d211838a122648c9c91d86b24d1782",
+    "status": "plotted",
+    "primary_records": 50,
+    "datasets": 84,
+    "plot": "plots/example_battery.xls.png"
+  },
+  {
+    "file": "export_data1_cv_results.ods",
+    "source": "example_data/export_data1_cv_results.ods",
+    "repository": "PySimpleEChem",
+    "format": "ods",
+    "bytes": 159004,
+    "sha256": "b8dc9c4e2dc993d2c3d0bcbb954bbdc466c4f0d5f7a5daef5a1a2a8e68234c9b",
+    "status": "plotted",
+    "primary_records": 3998,
+    "datasets": 1,
+    "plot": "plots/export_data1_cv_results.ods.png"
   }
 ]

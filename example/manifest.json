@@ -4,41 +4,95 @@
     "source": "galvani/tests/testdata/CV_C01.mpr",
     "format": "mpr",
     "bytes": 459792,
-    "sha256": "bfb88af504667cca737d07c24462492784b4eb9cd55349cc0d328f775138b571"
+    "sha256": "bfb88af504667cca737d07c24462492784b4eb9cd55349cc0d328f775138b571",
+    "repository": "echem-data-viewer"
   },
   {
     "file": "example.mpt",
     "source": "fixtures/example.mpt",
     "format": "mpt",
     "bytes": 225,
-    "sha256": "0d6e0d04dd420e5769d36d37f2ff17090325ccbacbf556e2b1d3fdd8d081428f"
+    "sha256": "0d6e0d04dd420e5769d36d37f2ff17090325ccbacbf556e2b1d3fdd8d081428f",
+    "repository": "echem-data-viewer"
   },
   {
     "file": "eispot_data.dta",
     "source": "gamry-parser/tests/eispot_data.dta",
     "format": "dta",
     "bytes": 1523,
-    "sha256": "cf3c0beae67a06cc01904c443e92403a7cd2b1613d732b284aae2c309c1986b5"
+    "sha256": "cf3c0beae67a06cc01904c443e92403a7cd2b1613d732b284aae2c309c1986b5",
+    "repository": "echem-data-viewer"
   },
   {
     "file": "TestFile.nda",
     "source": "NewareNDA/tests/nda/github/Issue72/TestFile.nda",
     "format": "nda",
     "bytes": 393760,
-    "sha256": "bf43594b31e2e9b3d482c2ecc6f2c274418a5d2160b818ed87e70279cabf7b68"
+    "sha256": "bf43594b31e2e9b3d482c2ecc6f2c274418a5d2160b818ed87e70279cabf7b68",
+    "repository": "echem-data-viewer"
   },
   {
     "file": "123456789012_Unit27_Example_Data_File.ndax",
     "source": "NewareNDA/tests/nda/github/Issue94/123456789012_Unit27_Example_Data_File.ndax",
     "format": "ndax",
     "bytes": 5844,
-    "sha256": "9f7198e5f3854bcb91b8bad268f020836ed1aa48f0135e2f7b1515827e61c9f6"
+    "sha256": "9f7198e5f3854bcb91b8bad268f020836ed1aa48f0135e2f7b1515827e61c9f6",
+    "repository": "echem-data-viewer"
   },
   {
     "file": "arbin1.res",
     "source": "galvani/tests/testdata/arbin1.res",
     "format": "res",
     "bytes": 544768,
-    "sha256": "4d461c069b396f2179243ca30286fa4cb285ef0c86675bc3c9dc5327980b795e"
+    "sha256": "4d461c069b396f2179243ca30286fa4cb285ef0c86675bc3c9dc5327980b795e",
+    "repository": "echem-data-viewer"
+  },
+  {
+    "file": "example_CV_1.par",
+    "source": "example_data/example_CV_1.par",
+    "repository": "PySimpleEChem",
+    "format": "par",
+    "bytes": 190341,
+    "sha256": "79edea3504f7f0b2cb73c93edd7ce5f0799ee7f9d666f10fc2d58ca94e76bfd2"
+  },
+  {
+    "file": "rde_500rpm.cor",
+    "source": "example_data/rde_500rpm.cor",
+    "repository": "PySimpleEChem",
+    "format": "cor",
+    "bytes": 27585,
+    "sha256": "450fc61da17ddb1be05a492288babf8d15055c095dd818c670cd8431da9764c5"
+  },
+  {
+    "file": "example_CV.csv",
+    "source": "example_data/example_CV.csv",
+    "repository": "PySimpleEChem",
+    "format": "csv",
+    "bytes": 76895,
+    "sha256": "d0799515c0beea837d5687b6d09ae36094469ef58358bbe625c2bf2bd8e8707b"
+  },
+  {
+    "file": "example_CV.txt",
+    "source": "example_data/example_CV.txt",
+    "repository": "PySimpleEChem",
+    "format": "txt",
+    "bytes": 80888,
+    "sha256": "d87c4294dce525c2a9788ffb95a5ee8f93abf1f727d99659dc97222eca870e67"
+  },
+  {
+    "file": "example_battery.xls",
+    "source": "example_data/example_battery.xls",
+    "repository": "PySimpleEChem",
+    "format": "xls",
+    "bytes": 84284,
+    "sha256": "970f7a1e44fb89a97deee457ac0826b114d211838a122648c9c91d86b24d1782"
+  },
+  {
+    "file": "export_data1_cv_results.ods",
+    "source": "example_data/export_data1_cv_results.ods",
+    "repository": "PySimpleEChem",
+    "format": "ods",
+    "bytes": 159004,
+    "sha256": "b8dc9c4e2dc993d2c3d0bcbb954bbdc466c4f0d5f7a5daef5a1a2a8e68234c9b"
   }
 ]

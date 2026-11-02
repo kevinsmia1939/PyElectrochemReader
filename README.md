@@ -62,6 +62,11 @@ the [plot gallery](example/index.html), and a script to regenerate the plots.
 | `.nda` | Neware versions 29 and 130, including BTS 9 and 9.1 record families |
 | `.ndax` | Neware ZIP archives containing NDC versions 2, 5, 11, 14 |
 | `.res` | Arbin Jet 3/4 `Channel_Normal_Table`, decoded directly in Python |
+| `.par` | Princeton Applied Research VersaStudio ASCII segments |
+| `.cor` | CorrWare ASCII, including current-density columns |
+| `.csv`, `.txt`, `.tsv` | Delimited tables, with or without column headers |
+| `.xlsx`, `.xls` | OOXML workbooks, including XLSX content saved with an `.xls` suffix |
+| `.ods` | OpenDocument spreadsheets |
 
 These are supported format families, not a promise to decode every proprietary
 variant or every electrochemical instrument. Unknown binary versions, column
@@ -69,6 +74,31 @@ widths, and unsupported measurement types raise `UnsupportedFormatError`
 instead of guessing a layout. Corrupt files and files without measurements
 raise `ReadError`. Both exceptions inherit from `ValueError`; filesystem errors
 such as `FileNotFoundError` remain filesystem errors.
+
+PAR and COR support was checked against the examples in
+[PySimpleEChem](https://github.com/kevinsmia1939/PySimpleEChem). PAR segments
+preserve all recorded columns. COR files labelled `I(A/cm2)` expose
+`data["current_density"]` in A/cm²; they do not acquire a `current` alias because
+the recorded values are normalized by electrode area.
+
+CSV/TXT/TSV readers detect comma, semicolon, tab, or whitespace separators.
+Column headers and their units are preserved. Headerless numeric tables follow
+PySimpleEChem's convention: the first column is potential in V and the second
+is current in A. No first data point is dropped. Use explicit overrides when
+automatic detection is ambiguous:
+
+```python
+data = read("measurement.csv", delimiter=";", header=True)[0]
+data = read("measurement.txt", delimiter="whitespace", header=False)[0]
+```
+
+XLSX and ODS files are read with the standard-library ZIP/XML modules. Each
+worksheet or repeated battery measurement table becomes a dataset. Stored
+numbers, text, missing cells, and cached formula results are preserved; formulas
+are not recalculated. Time-formatted Excel cells and explicit elapsed-time
+strings are decoded to seconds. The PySimpleEChem battery `.xls` example is an
+OOXML workbook; genuine legacy binary XLS/OLE/BIFF files remain unsupported.
+No pandas, openpyxl, xlrd, or odfpy dependency is required.
 
 `read()` accepts paths and binary streams, with case-insensitive extensions:
 
@@ -101,8 +131,10 @@ Aliases are available when a suitable native column exists:
 | `time` | s |
 | `voltage` | V |
 | `current` | A |
+| `current_density` | A/cm² |
 | `frequency` | Hz |
 | `charge_capacity`, `discharge_capacity` | Ah |
+| `capacity` | Ah |
 | `cycle`, `step` | recorded counters |
 
 Native names take precedence over aliases. No alias estimates missing signals.
@@ -140,6 +172,10 @@ PYTHONPATH=src python3 -W error -m unittest discover -v
 
 # Also check the example repository's instrument files, when available:
 ECHEM_REFERENCE=/path/to/echem-data-viewer \
+  PYTHONPATH=src python3 -W error -m unittest discover -v
+
+# Also validate the new readers against PySimpleEChem's example files:
+PYSIMPLEECHEM_REFERENCE=/path/to/PySimpleEChem \
   PYTHONPATH=src python3 -W error -m unittest discover -v
 
 # Measure read times for your own files:

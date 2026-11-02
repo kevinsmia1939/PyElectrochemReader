@@ -31,7 +31,8 @@ ALIASES = {
                            ("Discharge_Capacity", 1)],
 }
 ALIAS_UNITS = dict(time="s", voltage="V", current="A", frequency="Hz",
-                   cycle="", step="", charge_capacity="Ah", discharge_capacity="Ah")
+                   cycle="", step="", capacity="Ah", current_density="A/cm²",
+                   charge_capacity="Ah", discharge_capacity="Ah")
 
 
 def infer_units(names):
@@ -60,6 +61,7 @@ class Dataset:
     units: dict[str, str] = field(default_factory=dict)
     name: str = ""
     metadata: dict[str, Any] = field(default_factory=dict)
+    aliases: dict[str, tuple[str, float]] = field(default_factory=dict)
 
     def __post_init__(self):
         self.columns = {key: np.asarray(value) for key, value in self.columns.items()}
@@ -70,6 +72,10 @@ class Dataset:
     def _source(self, name):
         if name in self.columns:
             return name, 1
+        if name in self.aliases:
+            source, factor = self.aliases[name]
+            if source in self.columns:
+                return source, factor
         for source, factor in ALIASES.get(name, ()):
             if source in self.columns:
                 return source, factor

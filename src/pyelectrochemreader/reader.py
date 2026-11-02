@@ -7,16 +7,19 @@ from xml.etree.ElementTree import ParseError
 
 from .core import ReadError, UnsupportedFormatError
 
-supported_formats = (".nox", ".mpr", ".mpt", ".dta", ".nda", ".ndax", ".res")
+supported_formats = (".nox", ".mpr", ".mpt", ".dta", ".nda", ".ndax", ".res",
+                     ".par", ".cor", ".csv", ".txt", ".tsv", ".xlsx", ".xls", ".ods")
 
 
-def read(source, *, format=None, encoding=None):
+def read(source, *, format=None, encoding=None, delimiter=None, header=None):
     """Read a path or binary stream into an :class:`Experiment`.
 
     Extensions are case insensitive. Use ``format='mpr'`` for an unnamed
     stream or a file with a different extension. ``encoding`` overrides text
     decoding (by default UTF-8, falling back to Windows-1252).
     Streams are read from their current position and are left open.
+    For CSV/TXT/TSV, ``delimiter`` overrides separator detection and ``header``
+    explicitly enables/disables a column-name row. Both default to detection.
     """
     name = None
     if isinstance(source, (str, Path)) or hasattr(source, "__fspath__"):
@@ -30,6 +33,10 @@ def read(source, *, format=None, encoding=None):
     suffix = "." + format.lower().lstrip(".") if format else suffix
     if suffix not in supported_formats:
         raise UnsupportedFormatError(f"Unsupported format {suffix!r}; expected {', '.join(supported_formats)}")
+    if (delimiter is not None or header is not None) and suffix not in (".csv", ".txt", ".tsv"):
+        raise TypeError("delimiter and header are only supported for CSV/TXT/TSV")
+    if header is not None and not isinstance(header, bool):
+        raise TypeError("header must be True, False, or None")
     if isinstance(source, (str, Path)) or hasattr(source, "__fspath__"):
         raw = path.read_bytes()
     else:
@@ -52,6 +59,15 @@ def read(source, *, format=None, encoding=None):
         elif suffix in (".nda", ".ndax"):
             from .neware import read_nda, read_ndax
             result = (read_nda if suffix == ".nda" else read_ndax)(raw)
+        elif suffix in (".par", ".cor"):
+            from .versastudio import read_par, read_cor
+            result = (read_par if suffix == ".par" else read_cor)(raw, encoding)
+        elif suffix in (".csv", ".txt", ".tsv"):
+            from .versastudio import read_delimited
+            result = read_delimited(raw, suffix[1:], encoding, delimiter, header)
+        elif suffix in (".xlsx", ".xls", ".ods"):
+            from .spreadsheets import read_spreadsheet
+            result = read_spreadsheet(raw, suffix[1:])
         else:
             from .arbin import read_res
             result = read_res(raw)
