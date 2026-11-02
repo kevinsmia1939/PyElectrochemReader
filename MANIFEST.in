@@ -1,3 +1,4 @@
 include THIRD_PARTY_NOTICES.md
+include PUBLISHING.md
 recursive-include tests *.py
 recursive-include benchmarks *.py

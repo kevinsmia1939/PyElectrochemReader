@@ -16,6 +16,11 @@ classifiers = [
   "Topic :: Scientific/Engineering :: Chemistry",
 ]
 
+[project.urls]
+Source = "https://github.com/kevinsmia1939/PyElectrochemReader"
+Issues = "https://github.com/kevinsmia1939/PyElectrochemReader/issues"
+Documentation = "https://github.com/kevinsmia1939/PyElectrochemReader#readme"
+
 [tool.setuptools.packages.find]
 where = ["src"]
 
