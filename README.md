@@ -5,8 +5,8 @@ A small Python library for reading electrochemical measurement files.
 Requires Python 3.10 or newer.
 
 ```sh
-python3 -m pip install .
-python3 -m pip install matplotlib
+pip install pyelectrochemreader
+pip install matplotlib
 ```
 
 Matplotlib is optional and is used here to plot the included MPR example.
