@@ -135,3 +135,30 @@ class Experiment:
 
     def __len__(self):
         return len(self.datasets)
+
+
+@dataclass
+class Configuration:
+    """Settings or graph configuration, represented as source text and tables.
+
+    ``print(configuration)`` displays the decoded source text. Indexing and
+    iteration access settings tables, not recorded measurement signals.
+    """
+
+    text: str
+    tables: tuple[Dataset, ...]
+    format: str
+    metadata: dict[str, Any] = field(default_factory=dict)
+    source: str | None = None
+
+    def __getitem__(self, index):
+        return self.tables[index]
+
+    def __iter__(self):
+        return iter(self.tables)
+
+    def __len__(self):
+        return len(self.tables)
+
+    def __str__(self):
+        return self.text

@@ -1,5 +1,22 @@
 # One example per format
 
+Bio-Logic configuration examples in `data/biologic/` produce text and tables:
+
+```sh
+PYTHONPATH=src python3 example/read_configurations.py
+```
+
+The reports are written under [text/biologic/](text/biologic/). Each includes
+the decoded source text, complete metadata, CSV tables, and a browsable HTML
+view. MPS tables describe sequences and settings; MGR tables describe axes,
+trace styles, and other graph properties. These configuration files are not
+plotted. Their companion `.mpr` remains a measurement file; `.sta` is unsupported.
+
+| Configuration example | Text and tables |
+| --- | --- |
+| [example.mps](data/biologic/example.mps) | [Protocol settings](text/biologic/example.mps/index.html) |
+| [example.mgr](data/biologic/example.mgr) | [Graph properties](text/biologic/example.mgr/index.html) |
+
 Open [index.html](index.html) for the offline plot gallery, or view the
 [overview](plots/overview.png). There is one raw file and one full plot for
 each of the twelve formats found in the two source checkouts:

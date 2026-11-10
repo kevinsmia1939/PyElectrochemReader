@@ -1,0 +1,31 @@
+{
+  "instrument": "Bio-Logic",
+  "software": "BT-LAB",
+  "header": "BT-LAB SETTING FILE\n\nNumber of linked techniques : 1\n\nBT-LAB for windows v1.79 (software)\nInternet server v1.74 (firmware)\nCommand interpretor v1.79 (firmware)\n\nFilename : C:\\Users\\Battery Cycler 2\\OneDrive - Universiteit Antwerpen\\Bureaublad\\Kavin Teenakul\\copper_flow_battery\\20261105\\cycle_pulsator_sequence_75mAcm2_1Hz.mps\n\nDevice : BCS-815\nEcell ctrl range : min = 0,00 V, max = 9,00 V\nElectrode material : \nInitial state : \nElectrolyte : \nComments : \nMass of active material : 0,001 mg\n at x = 0,000\nMolecular weight of active material (at x = 0) : 0,001 g/mol\nAtomic weight of intercalated ion : 0,001 g/mol\nAcquisition started at : xo = 0,000\nNumber of e- transfered per intercalated ion : 1\nfor DX = 1, DQ = 26,802 mA.h\nBattery capacity : 0,000 A.h\nElectrode surface area : 0,001 cm²\nCharacteristic mass : 0,001 g\nVolume (V) : 0,001 cm³\nCycle Definition : Charge/Discharge alternance\nDo not turn to OCV between techniques\n",
+  "settings": {
+    "Number of linked techniques": "1",
+    "Filename": "C:\\Users\\Battery Cycler 2\\OneDrive - Universiteit Antwerpen\\Bureaublad\\Kavin Teenakul\\copper_flow_battery\\20261105\\cycle_pulsator_sequence_75mAcm2_1Hz.mps",
+    "Device": "BCS-815",
+    "Ecell ctrl range": "min = 0,00 V, max = 9,00 V",
+    "Electrode material": "",
+    "Initial state": "",
+    "Electrolyte": "",
+    "Comments": "",
+    "Mass of active material": "0,001 mg",
+    "Molecular weight of active material (at x = 0)": "0,001 g/mol",
+    "Atomic weight of intercalated ion": "0,001 g/mol",
+    "Acquisition started at": "xo = 0,000",
+    "Number of e- transfered per intercalated ion": "1",
+    "Battery capacity": "0,000 A.h",
+    "Electrode surface area": "0,001 cm²",
+    "Characteristic mass": "0,001 g",
+    "Volume (V)": "0,001 cm³",
+    "Cycle Definition": "Charge/Discharge alternance"
+  },
+  "techniques": [
+    {
+      "number": 1,
+      "name": "Modulo Bat"
+    }
+  ]
+}

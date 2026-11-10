@@ -1,0 +1,5 @@
+xml_path,Axis,Name,ShortName,DrawGrid,AxisEnabled,GridColor,GridStyle,Title,StartPos,EndPos,AutoScale,TitleAuto,Color,ScientNotation,Min,Max,Inverted,ProcessID,ProcessExpr,AutoScroll
+/Configuration[1]/Configuration[1]/Windows[1]/Graph[1]/AxesStyle[1]/AxisStyle[1],x-axis,,,True,True,12632256,0,Capacity/mA.h,0,100,True,True,0,False,-15.6954688940578,800.468913596947,False,0,,False
+/Configuration[1]/Configuration[1]/Windows[1]/Graph[1]/AxesStyle[1]/AxisStyle[2],y1-axis,,,True,True,12632256,0,Ecell/V,0,100,True,True,255,False,0.287614442110062,0.912252269983292,False,0,,False
+/Configuration[1]/Configuration[1]/Windows[1]/Graph[1]/AxesStyle[1]/AxisStyle[3],y2-axis,,,True,False,255,0,I/mA,0,100,True,True,255,False,1.0,10.0,False,0,,False
+/Configuration[1]/Configuration[1]/Windows[1]/Graph[1]/AxesStyle[1]/AxisStyle[4],z-axis,,,True,False,12632256,0,,0,100,True,True,0,False,0.0,0.0,False,0,,False

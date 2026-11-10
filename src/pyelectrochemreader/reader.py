@@ -5,14 +5,15 @@ import struct
 import zipfile
 from xml.etree.ElementTree import ParseError
 
-from .core import ReadError, UnsupportedFormatError
+from .core import Configuration, ReadError, UnsupportedFormatError
 
 supported_formats = (".nox", ".mpr", ".mpt", ".dta", ".nda", ".ndax", ".res",
-                     ".par", ".cor", ".csv", ".txt", ".tsv", ".xlsx", ".xls", ".ods")
+                     ".par", ".cor", ".csv", ".txt", ".tsv", ".xlsx", ".xls", ".ods",
+                     ".mps", ".mgr")
 
 
 def read(source, *, format=None, encoding=None, delimiter=None, header=None):
-    """Read a path or binary stream into an :class:`Experiment`.
+    """Read a path or binary stream into an Experiment or Configuration.
 
     Extensions are case insensitive. Use ``format='mpr'`` for an unnamed
     stream or a file with a different extension. ``encoding`` overrides text
@@ -20,6 +21,7 @@ def read(source, *, format=None, encoding=None, delimiter=None, header=None):
     Streams are read from their current position and are left open.
     For CSV/TXT/TSV, ``delimiter`` overrides separator detection and ``header``
     explicitly enables/disables a column-name row. Both default to detection.
+    MPS/MGR files return Configuration objects with source text and tables.
     """
     name = None
     if isinstance(source, (str, Path)) or hasattr(source, "__fspath__"):
@@ -53,6 +55,9 @@ def read(source, *, format=None, encoding=None, delimiter=None, header=None):
         elif suffix == ".mpr":
             from .biologic import read_mpr
             result = read_mpr(raw)
+        elif suffix in (".mps", ".mgr"):
+            from .biologic_settings import read_mps, read_mgr
+            result = (read_mps if suffix == ".mps" else read_mgr)(raw, encoding)
         elif suffix == ".nox":
             from .nova import read_nox
             result = read_nox(raw)
@@ -76,7 +81,7 @@ def read(source, *, format=None, encoding=None, delimiter=None, header=None):
     except (ValueError, IndexError, KeyError, StopIteration, struct.error,
             EOFError, UnicodeError, zipfile.BadZipFile, ParseError) as exc:
         raise ReadError(f"Invalid {suffix} file: {exc}") from exc
-    if not result.datasets or not any(len(dataset) for dataset in result):
+    if not isinstance(result, Configuration) and (not result.datasets or not any(len(dataset) for dataset in result)):
         raise ReadError(f"No measurement records in {suffix} file")
     result.source = name
     return result

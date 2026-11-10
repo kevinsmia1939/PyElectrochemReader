@@ -20,7 +20,12 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-from pyelectrochemreader import ReadError, read, supported_formats
+from pyelectrochemreader import Configuration, ReadError, read, supported_formats
+
+if __package__:
+    from .read_configurations import write_configuration
+else:
+    from read_configurations import write_configuration
 
 ROOT = Path(__file__).resolve().parent
 DATA = ROOT / "data"
@@ -243,6 +248,8 @@ def render_file(experiment, relative, destination):
 
 def render_overview(results):
     selected = [r for r in results if r["status"] == "plotted"]
+    if not selected:
+        return
     rows = (len(selected) + 2) // 3
     fig, axes = plt.subplots(rows, 3, figsize=(14, rows * 4), layout="constrained", squeeze=False)
     for axis, entry in zip(axes.ravel(), selected):
@@ -288,6 +295,10 @@ def gallery(results):
             plot_url = quote(entry["plot"])
             preview = f'<a href="{plot_url}"><img loading="lazy" src="{plot_url}" alt="Plots for {filename}"></a>'
             details = f'{entry["primary_records"]:,} primary records · {entry["datasets"]} datasets'
+        elif entry["status"] == "configuration":
+            report_url = quote(entry["report"])
+            preview = f'<p><a href="{report_url}">View configuration text and tables ↗</a></p>'
+            details = f'{entry["tables"]} configuration tables'
         else:
             preview = f'<div class="error">{html.escape(entry["error"])}</div>'
             details = "No measurement records to plot"
@@ -295,6 +306,7 @@ def gallery(results):
                      f'<p class="path">{source}</p>{preview}<footer><span>{details}</span><a href="{raw_url}">Raw file ↗</a></footer></article>')
     counts = Counter(r["format"] for r in results)
     options = ''.join(f'<option value="{key}">.{key} ({value})</option>' for key, value in sorted(counts.items()))
+    overview = '<a href="plots/overview.png">Format overview</a> · ' if any(r["status"] == "plotted" for r in results) else ""
     document = '''<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Electrochemical example plots</title><style>
 *{box-sizing:border-box}body{margin:0;background:#f1f5f8;color:#162b40;font:15px system-ui,sans-serif}main{max-width:1500px;margin:auto;padding:38px 24px}
@@ -307,13 +319,13 @@ footer{display:flex;justify-content:space-between;gap:12px;margin-top:16px;font-
 <p>One example file per available format. Click a plot for full resolution or download its raw file.<br>
 Missing signals are marked; recorded gaps remain missing. Neware plots use record indices because recorded step time can reset.
 No .nox file was found in the source checkout.</p>
-<p><a href="plots/overview.png">Format overview</a> · <a href="manifest.json">File hashes and provenance</a> · <a href="results.json">Read results</a></p></header>
+<p>OVERVIEW<a href="manifest.json">File hashes and provenance</a> · <a href="results.json">Read results</a></p></header>
 <nav><input id="search" aria-label="Filter files" placeholder="Find a file or source folder…"><select id="format" aria-label="Filter by format"><option value="">All formats</option>OPTIONS</select></nav>
 <div class="grid">CARDS</div></main><script>
 const search=document.querySelector('#search'), format=document.querySelector('#format');
 function filter(){document.querySelectorAll('article').forEach(card=>{card.hidden=!card.dataset.search.includes(search.value.toLowerCase())||(format.value&&card.dataset.format!==format.value)})}
 search.addEventListener('input',filter);format.addEventListener('change',filter);
-</script></html>'''.replace("OPTIONS", options).replace("CARDS", "\n".join(cards))
+</script></html>'''.replace("OVERVIEW", overview).replace("OPTIONS", options).replace("CARDS", "\n".join(cards))
     (ROOT / "index.html").write_text(document)
 
 
@@ -334,6 +346,12 @@ def main():
         relative = Path(entry["file"])
         try:
             experiment = read(DATA / relative)
+            if isinstance(experiment, Configuration):
+                report = write_configuration(experiment, ROOT / "text" / relative)
+                result.update(status="configuration", tables=len(experiment.tables), report=report.relative_to(ROOT).as_posix())
+                print(f'CONFIGURATION {relative}', flush=True)
+                results.append(result)
+                continue
             destination = PLOTS / relative.with_name(relative.name + ".png")
             render_file(experiment, relative, destination)
             result.update(status="plotted", primary_records=len(experiment[0]), datasets=len(experiment),

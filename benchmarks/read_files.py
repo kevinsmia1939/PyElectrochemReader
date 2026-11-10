@@ -5,7 +5,7 @@ from pathlib import Path
 from statistics import median
 from time import perf_counter
 
-from pyelectrochemreader import ReadError, read, supported_formats
+from pyelectrochemreader import Configuration, ReadError, read, supported_formats
 
 
 def main():
@@ -29,7 +29,9 @@ def main():
             except (ReadError, OSError) as exc:
                 print(f"ERROR {file}: {exc}")
                 continue
-            print(f"{median(times):.6f} s  {len(experiment[0]):>10,} primary rows  {file}")
+            rows = sum(len(table) for table in experiment) if isinstance(experiment, Configuration) else len(experiment[0])
+            label = "configuration rows" if isinstance(experiment, Configuration) else "primary rows"
+            print(f"{median(times):.6f} s  {rows:>10,} {label}  {file}")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,83 @@
+BT-LAB SETTING FILE
+
+Number of linked techniques : 1
+
+BT-LAB for windows v1.79 (software)
+Internet server v1.74 (firmware)
+Command interpretor v1.79 (firmware)
+
+Filename : C:\Users\Battery Cycler 2\OneDrive - Universiteit Antwerpen\Bureaublad\Kavin Teenakul\copper_flow_battery\20261105\cycle_pulsator_sequence_75mAcm2_1Hz.mps
+
+Device : BCS-815
+Ecell ctrl range : min = 0,00 V, max = 9,00 V
+Electrode material : 
+Initial state : 
+Electrolyte : 
+Comments : 
+Mass of active material : 0,001 mg
+ at x = 0,000
+Molecular weight of active material (at x = 0) : 0,001 g/mol
+Atomic weight of intercalated ion : 0,001 g/mol
+Acquisition started at : xo = 0,000
+Number of e- transfered per intercalated ion : 1
+for DX = 1, DQ = 26,802 mA.h
+Battery capacity : 0,000 A.h
+Electrode surface area : 0,001 cm²
+Characteristic mass : 0,001 g
+Volume (V) : 0,001 cm³
+Cycle Definition : Charge/Discharge alternance
+Do not turn to OCV between techniques
+
+Technique : 1
+Modulo Bat
+Ns                  0                   1                   2                   3                   4                   5                   6                   7                   8                   9                   10                  11                  12                  13                  
+ctrl_type           TO                  Rest                CC                  TO                  Rest                CC                  TO                  Rest                TO                  Rest                CC                  TO                  Rest                Loop                
+Apply I/C           I                   I                   I                   I                   I                   I                   I                   I                   I                   I                   I                   I                   I                   I                   
+current/potential   current             current             current             current             current             current             current             current             current             current             current             current             current             current             
+ctrl1_val           50,000              50,000              50,000              50,000              50,000              500,000             500,000             500,000             250,000             250,000             500,000             500,000             250,000             250,000             
+ctrl1_val_unit                                              mA                                                          mA                                                                                                  mA                                                                              
+ctrl1_val_vs                                                <None>                                                      <None>                                                                                              <None>                                                                          
+ctrl2_val           0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               
+ctrl2_val_unit                                                                                                                                                                                                                                                                                              
+ctrl2_val_vs                                                                                                                                                                                                                                                                                                
+ctrl3_val           0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               
+ctrl3_val_unit                                                                                                                                                                                                                                                                                              
+ctrl3_val_vs                                                                                                                                                                                                                                                                                                
+N                   1,00                1,00                1,00                1,00                1,00                1,00                1,00                1,00                1,00                1,00                1,00                1,00                1,00                1,00                
+charge/discharge    Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Discharge           Discharge           Discharge           Charge              
+charge/discharge_1  Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              
+Apply I/C_1         I                   I                   I                   I                   I                   I                   I                   I                   I                   I                   I                   I                   I                   I                   
+N1                  0,00                0,00                0,00                0,00                0,00                0,00                0,00                0,00                0,00                0,00                0,00                0,00                0,00                0,00                
+ctrl4_val           0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               
+ctrl4_val_unit                                                                                                                                                                                                                                                                                              
+ctrl5_val           0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               
+ctrl5_val_unit                                                                                                                                                                                                                                                                                              
+ctrl_tM             0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   
+ctrl_seq            0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   3                   
+ctrl_repeat         0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   10                  
+ctrl_trigger        Rising Edge         Falling Edge        Falling Edge        Rising Edge         Falling Edge        Falling Edge        Rising Edge         Falling Edge        Rising Edge         Falling Edge        Falling Edge        Rising Edge         Falling Edge        Falling Edge        
+ctrl_TO_t           1,000               0,000               0,000               4,000               0,000               0,000               2,000               0,000               6,000               0,000               0,000               2,000               0,000               0,000               
+ctrl_TO_t_unit      s                   d                   d                   s                   d                   d                   s                   d                   s                   d                   d                   s                   d                   d                   
+ctrl_Nd             6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   
+ctrl_Na             1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   
+ctrl_corr           1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   
+lim_nb              0                   1                   1                   0                   1                   1                   0                   1                   0                   1                   1                   0                   1                   0                   
+lim1_type           Time                Time                Time                Time                Time                Ecell               Ecell               Time                Time                Time                Ecell               Ecell               Time                Time                
+lim1_comp           >                   >                   >                   >                   >                   >                   >                   >                   >                   >                   <                   <                   >                   >                   
+lim1_Q              Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             
+lim1_value          5,000               60,000              5,000               5,000               5,000               0,900               1,000               3,000               3,000               10,000              0,300               0,200               3,000               5,000               
+lim1_value_unit     s                   s                   s                   s                   s                   V                   V                   mn                  mn                  s                   V                   V                   mn                  s                   
+lim1_action         Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       
+lim1_seq            1                   2                   3                   4                   5                   6                   7                   8                   9                   10                  11                  12                  13                  14                  
+rec_nb              0                   1                   1                   0                   1                   1                   0                   1                   0                   1                   1                   0                   1                   0                   
+rec1_type           Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                
+rec1_value          10,000              10,000              10,000              10,000              10,000              10,000              10,000              10,000              10,000              10,000              10,000              10,000              10,000              10,000              
+rec1_value_unit     s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   
+E range min (V)     0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               0,000               
+E range max (V)     9,000               9,000               9,000               9,000               9,000               9,000               9,000               9,000               9,000               9,000               9,000               9,000               9,000               9,000               
+I Range             1 A                 1 A                 1 A                 1 A                 1 A                 1 A                 1 A                 1 A                 1 A                 1 A                 1 A                 1 A                 1 A                 1 A                 
+I Range min         Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               
+I Range max         Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               
+I Range init        Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               
+auto rest           1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   
+Bandwidth           4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   

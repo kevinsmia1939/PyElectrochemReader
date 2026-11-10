@@ -58,6 +58,8 @@ the [plot gallery](example/index.html), and a script to regenerate the plots.
 | `.nox` | Metrohm Autolab NOVA NRBF object graphs; calculated numeric command signals |
 | `.mpr` | Bio-Logic EC-Lab/BT-Lab; legacy and 11.50 module headers, data versions 0, 2, 3 |
 | `.mpt` | Bio-Logic tab-separated ASCII; decimal dots or commas |
+| `.mps` | Bio-Logic EC-Lab/BT-Lab protocol settings as text, metadata, and technique tables |
+| `.mgr` | Bio-Logic XML graph configuration as text, metadata, and property tables |
 | `.dta` | Gamry EXPLAIN tables, multiple curves, EIS, OCV, VFP600 |
 | `.nda` | Neware versions 29 and 130, including BTS 9 and 9.1 record families |
 | `.ndax` | Neware ZIP archives containing NDC versions 2, 5, 11, 14 |
@@ -73,7 +75,45 @@ variant or every electrochemical instrument. Unknown binary versions, column
 widths, and unsupported measurement types raise `UnsupportedFormatError`
 instead of guessing a layout. Corrupt files and files without measurements
 raise `ReadError`. Both exceptions inherit from `ValueError`; filesystem errors
-such as `FileNotFoundError` remain filesystem errors.
+such as `FileNotFoundError` remain filesystem errors. Configuration files do not
+need measurement records or numeric signals to be valid.
+
+For `.mps` and `.mgr`, `read()` returns a `Configuration` with `text`, `tables`,
+`metadata`, `format`, and `source`. These files describe a protocol or graph;
+their output is text and tables, with no plotting:
+
+```python
+from pyelectrochemreader import read
+
+settings = read("protocol.mps")
+print(settings.text)                        # original decoded settings text
+print(settings.metadata["settings"])        # device and experiment properties
+for table in settings.tables:
+    print(table.name)
+    print(table.to_numpy())                 # NumPy structured table
+
+graph = read("graph.mgr")
+for table in graph.tables:
+    print(table.name, table.column_names)
+axes = next(table for table in graph.tables if table.name == "AxesStyle/AxisStyle")
+print(axes.to_numpy(["Axis", "Title", "Min", "Max"]))
+```
+
+MPS sequence tables have one row per `Ns` sequence and preserve the original
+parameter names, control codes, and per-sequence unit fields. Numeric decimal
+commas are decoded; blank text/unit cells remain empty. Linked techniques and
+single-value techniques are kept separately. Original text retains content
+that is not tabular. MGR tables group XML attributes by their parent/element
+names and include an XML path to identify each row; the complete XML structure
+is also retained in `metadata["tree"]`. No measurement units or meanings are
+invented for graph-property codes.
+
+To export the configuration examples as UTF-8 text, CSV tables, and browsable
+HTML reports without Matplotlib:
+
+```sh
+PYTHONPATH=src python3 example/read_configurations.py
+```
 
 PAR and COR support was checked against the examples in
 [PySimpleEChem](https://github.com/kevinsmia1939/PySimpleEChem). PAR segments
@@ -115,7 +155,7 @@ for dataset in experiment:
 
 Streams are read from their current position and left open. Text decoding
 defaults to UTF-8 with a Windows-1252 fallback. An explicit `encoding` overrides
-that choice for MPT/DTA files.
+that choice for text files. MGR XML also honors its declared encoding or Unicode BOM.
 
 `Experiment` contains `datasets`, `format`, `metadata`, and `source`.
 `len(experiment)` counts datasets. Each `Dataset` contains `columns` (a dictionary
