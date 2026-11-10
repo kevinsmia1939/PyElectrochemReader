@@ -2,6 +2,19 @@
 
 Bio-Logic configuration examples in `data/biologic/` produce text and tables:
 
+For a simple MPS-only example, [read_mps.py](data/biologic/read_mps.py) prints
+the experiment settings and every field/value for each sequence:
+
+```sh
+PYTHONPATH=src python3 example/data/biologic/read_mps.py
+```
+
+It uses `settings.to_text()` without truncating fields or sequences. For example,
+sequence `Ns=12` includes `ctrl_type: Rest`, `lim1_type: Time`, `lim1_comp: >`,
+`lim1_value: 3.0`, and `lim1_value_unit: mn` (a three-minute rest limit).
+
+To export both MPS and MGR reports:
+
 ```sh
 PYTHONPATH=src python3 example/read_configurations.py
 ```

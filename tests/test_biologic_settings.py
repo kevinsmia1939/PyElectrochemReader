@@ -58,6 +58,39 @@ class MPSTests(unittest.TestCase):
         assert_array_equal(config[0]["unit"], ["mA", ""])
         assert_array_equal(config[1]["Parameter"], ["goto Ne", "ntimes"])
         assert_array_equal(config[1]["Value"], ["1", "10"])
+        display = config.to_text()
+        self.assertIn("Technique 2: Loop\n\nRow 1\n  Parameter: goto Ne\n  Value: 1", display)
+        self.assertIn("Row 2\n  Parameter: ntimes\n  Value: 10", display)
+
+    def test_readable_text_shows_all_sequences_and_rest_limit_fields(self):
+        text = ("BT-LAB SETTING FILE\nDevice : BCS-815\nTechnique : 1\nModulo Bat\n" +
+                fixed("Ns", 0, 12, 13) + fixed("ctrl_type", "CC", "Rest", "Loop") +
+                fixed("ctrl1_val_unit", "mA", "", "") + fixed("lim_nb", 1, 1, 0) +
+                fixed("lim1_type", "Ecell", "Time", "Time") + fixed("lim1_comp", ">", ">", ">") +
+                fixed("lim1_value", ".9", "3,000", "5,000") + fixed("lim1_value_unit", "V", "mn", "s") +
+                fixed("lim1_action", "Next sequence", "Next sequence", "Next sequence") +
+                fixed("rec1_value", 10, 10, 10) + fixed("rec1_value_unit", "s", "s", "s"))
+        config = load(text, "mps")
+        with np.printoptions(threshold=1, linewidth=10):
+            display = config.to_text()
+        self.assertIn("Device : BCS-815", display)
+        self.assertIn("Technique 1: Modulo Bat", display)
+        self.assertIn("Sequence 0\n  Ns: 0\n  ctrl_type: CC", display)
+        self.assertIn("Sequence 13\n  Ns: 13\n  ctrl_type: Loop", display)
+        self.assertIn("Sequence 12\n"
+                      "  Ns: 12\n"
+                      "  ctrl_type: Rest\n"
+                      "  ctrl1_val_unit: \n"
+                      "  lim_nb: 1\n"
+                      "  lim1_type: Time\n"
+                      "  lim1_comp: >\n"
+                      "  lim1_value: 3.0\n"
+                      "  lim1_value_unit: mn\n"
+                      "  lim1_action: Next sequence\n"
+                      "  rec1_value: 10\n"
+                      "  rec1_value_unit: s", display)
+        self.assertNotIn("...", display)
+        self.assertEqual(str(config), text)
 
     def test_duplicate_parameter_names_are_preserved(self):
         text = ("EC-LAB SETTING FILE\nTechnique : 1\nTest\n" + fixed("Ns", 0) +
@@ -73,6 +106,7 @@ class MPSTests(unittest.TestCase):
         self.assertEqual(config.tables, ())
         self.assertEqual(len(config), 0)
         self.assertEqual(config.metadata["settings"]["Device"], "VMP3")
+        self.assertEqual(config.to_text(), text)
 
     def test_repeated_sequence_blocks(self):
         text = ("BT-LAB SETTING FILE\nTechnique : 1\nModulo Bat\n" +
@@ -131,6 +165,13 @@ class MGRTests(unittest.TestCase):
         self.assertEqual(tables["TracesParams/Trace"]["Variable"][0], "Ecell")
         self.assertEqual(tables["UnknownSetting/Note"]["xml_text"][0], "Keep & preserve")
         self.assertEqual(config.metadata["tree"]["tag"], "Configuration")
+        display = config.to_text()
+        self.assertIn("AxesStyle/AxisStyle\n\nRow 1", display)
+        self.assertIn("  Title: Capacity/mA.h", display)
+        self.assertIn("  Title: Ecell/V", display)
+        self.assertIn("  AxisEnabled: True", display)
+        self.assertIn("  AxisEnabled: ", display)
+        self.assertIn("  xml_text: Keep & preserve", display)
 
     def test_graph_paths_and_attribute_collisions(self):
         text = '''<Configuration><Graph Num="1"><AxisStyle Axis="x"/></Graph>
@@ -148,6 +189,7 @@ class MGRTests(unittest.TestCase):
         config = load('<Configuration xmlns="urn:biologic"/>', "mgr")
         self.assertEqual(config.tables, ())
         self.assertEqual(config.metadata["tree"]["tag"], "{urn:biologic}Configuration")
+        self.assertEqual(config.to_text(), config.text)
 
     def test_xml_encodings_and_override(self):
         for encoding in ("utf-8", "cp1252", "utf-16", "utf-32"):
@@ -180,6 +222,17 @@ class LocalBioLogicConfigurationTests(unittest.TestCase):
         self.assertEqual(len(settings[0].columns), 51)
         assert_array_equal(settings[0]["Ns"], np.arange(14))
         assert_array_equal(settings[0]["ctrl1_val_unit"][[2, 5, 10]], ["mA"] * 3)
+        block = settings.to_text().split("\nSequence 12\n", 1)[1].split("\nSequence 13\n", 1)[0]
+        fields = dict(line[2:].split(": ", 1) for line in block.splitlines() if line.startswith("  "))
+        self.assertEqual(len(fields), 51)
+        self.assertEqual(fields["ctrl_type"], "Rest")
+        self.assertEqual(fields["lim_nb"], "1")
+        self.assertEqual(fields["lim1_type"], "Time")
+        self.assertEqual(fields["lim1_comp"], ">")
+        self.assertEqual(fields["lim1_value"], "3.0")
+        self.assertEqual(fields["lim1_value_unit"], "mn")
+        self.assertEqual(fields["lim1_action"], "Next sequence")
+        self.assertEqual(fields["lim1_seq"], "13")
         graph = read(mgr[0])
         tables = {table.name: table for table in graph}
         self.assertEqual(len(tables["AxesStyle/AxisStyle"]), 4)

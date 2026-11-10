@@ -86,8 +86,8 @@ their output is text and tables, with no plotting:
 from pyelectrochemreader import read
 
 settings = read("protocol.mps")
-print(settings.text)                        # original decoded settings text
-print(settings.metadata["settings"])        # device and experiment properties
+print(settings.to_text())                   # every field/value for every sequence
+# settings.text retains the original decoded settings text.
 for table in settings.tables:
     print(table.name)
     print(table.to_numpy())                 # NumPy structured table
@@ -107,6 +107,12 @@ that is not tabular. MGR tables group XML attributes by their parent/element
 names and include an XML path to identify each row; the complete XML structure
 is also retained in `metadata["tree"]`. No measurement units or meanings are
 invented for graph-property codes.
+
+`Configuration.to_text()` displays all fields and values in separate blocks
+for every sequence (MPS) or table row (MGR), without array truncation. This
+includes control parameters, triggers, limits, actions, recording intervals,
+and their unit fields. Rest durations are stored in time-limit fields such as
+`lim1_type`, `lim1_comp`, `lim1_value`, and `lim1_value_unit`.
 
 To export the configuration examples as UTF-8 text, CSV tables, and browsable
 HTML reports without Matplotlib:

@@ -143,6 +143,8 @@ class Configuration:
 
     ``print(configuration)`` displays the decoded source text. Indexing and
     iteration access settings tables, not recorded measurement signals.
+    ``to_text()`` displays every parsed field and value, grouped by sequence
+    or table row, without NumPy's array-display truncation.
     """
 
     text: str
@@ -162,3 +164,25 @@ class Configuration:
 
     def __str__(self):
         return self.text
+
+    def to_text(self):
+        """Return all parsed settings as readable field/value blocks.
+
+        MPS tables use their native ``Ns`` sequence numbers. Other tables use
+        row numbers starting at one. Blank values remain blank; values and
+        unit fields are displayed separately, using their native names.
+        Configurations without tables return their decoded source text.
+        """
+        if not self.tables:
+            return self.text
+        sections = [self.metadata.get("header", f"{self.format.upper()} configuration").rstrip()]
+        for table in self.tables:
+            lines = [table.name or "Table"]
+            for index in range(len(table)):
+                label = f"Sequence {table.columns['Ns'][index]}" if "Ns" in table.columns else f"Row {index + 1}"
+                lines.append(f"\n{label}")
+                for name, values in table.columns.items():
+                    value = values[index]
+                    lines.append(f"  {name}: {'' if value is None else value}")
+            sections.append("\n".join(lines))
+        return "\n\n".join(sections)
